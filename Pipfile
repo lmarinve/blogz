@@ -1,0 +1,47 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+alembic = "*"
+blinker = "*"
+bleach = "*"
+click = "*"
+dominate = "*"
+flask = "*"
+flask-bootstrap = "*"
+flask-limiter = "*"
+flask-login = "*"
+flask-mail = "*"
+flask-migrate = "*"
+flask-moment = "*"
+flask-pagedown = "*"
+flask-restful = "*"
+flask-script = "*"
+flask-sqlalchemy = "*"
+flask-wtf = "*"
+ForgeryPy = "*"
+gunicorn = "*"
+ibm_db = "*"
+ibm_db_sa = "*"
+itsdangerous = "*"
+jinja2 = "*"
+jsonify = "*"
+mako = "*"
+markupsafe = "*"
+markdown = "*"
+python-dotenv = "*"
+requests = "*"
+six = "*"
+sqlalchemy = "*"
+tk = "*"
+uwsgi = "*"
+visitor = "*"
+werkzeug = "*"
+wtforms = "*"
+
+[requires]
+python_version = "3.6"
