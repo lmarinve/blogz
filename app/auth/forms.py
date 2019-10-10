@@ -1,8 +1,13 @@
-from flask_wtf import FlaskForm
+from flask_wtf import FlaskForm, RecaptchaField
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import Required, Length, Email, Regexp, EqualTo
 from wtforms import ValidationError
 from ..models import User
+
+
+class RecaptchaForm(FlaskForm):
+    recaptcha = RecaptchaField()
+    submit = SubmitField('Validate')
 
 
 class LoginForm(FlaskForm):
@@ -10,6 +15,7 @@ class LoginForm(FlaskForm):
                                              Email()])
     password = PasswordField('Password', validators=[Required()])
     remember_me = BooleanField('Keep me logged in')
+    recaptcha = RecaptchaField()
     submit = SubmitField('Log In')
 
 
@@ -40,6 +46,7 @@ class RegistrationForm(FlaskForm):
     password = PasswordField('Password', validators=[
         Required(), EqualTo('password2', message='Passwords must match.')])
     password2 = PasswordField('Confirm password', validators=[Required()])
+    recaptcha = RecaptchaField()
     submit = SubmitField('Register')
 
     def validate_email(self, field):
@@ -56,12 +63,14 @@ class ChangePasswordForm(FlaskForm):
     password = PasswordField('New password', validators=[
         Required(), EqualTo('password2', message='Passwords must match')])
     password2 = PasswordField('Confirm new password', validators=[Required()])
+    recaptcha = RecaptchaField()
     submit = SubmitField('Update Password')
 
 
 class PasswordResetRequestForm(FlaskForm):
     email = StringField('Email', validators=[Required(), Length(1, 32),
                                              Email()])
+    recaptcha = RecaptchaField()
     submit = SubmitField('Reset Password')
 
 
@@ -71,6 +80,7 @@ class PasswordResetForm(FlaskForm):
     password = PasswordField('New Password', validators=[
         Required(), EqualTo('password2', message='Passwords must match')])
     password2 = PasswordField('Confirm password', validators=[Required()])
+    recaptcha = RecaptchaField()
     submit = SubmitField('Reset Password')
 
     def validate_email(self, field):
@@ -82,6 +92,7 @@ class ChangeEmailForm(FlaskForm):
     email = StringField('New Email', validators=[Required(), Length(1, 64),
                                                  Email()])
     password = PasswordField('Password', validators=[Required()])
+    recaptcha = RecaptchaField()
     submit = SubmitField('Update Email Address')
 
     def validate_email(self, field):

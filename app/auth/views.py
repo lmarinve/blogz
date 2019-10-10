@@ -6,7 +6,7 @@ from .. import db
 from ..models import User
 from ..email import send_email
 from .forms import LoginForm, RegistrationForm, ChangePasswordForm,\
-    PasswordResetRequestForm, PasswordResetForm, ChangeEmailForm
+    PasswordResetRequestForm, PasswordResetForm, ChangeEmailForm, RecaptchaForm
 
 
 @auth.before_app_request
@@ -81,6 +81,7 @@ def confirm(token):
 @auth.route('/confirm')
 @login_required
 def resend_confirmation():
+    form = RecaptchaForm()
     token = current_user.generate_confirmation_token()
     send_email(current_user.email, 'Confirm Your Account',
                'auth/email/confirm', user=current_user, token=token)
