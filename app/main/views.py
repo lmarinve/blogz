@@ -51,13 +51,15 @@ def user(username):
 def edit_profile():
     form = EditProfileForm()
     if form.validate_on_submit():
-        current_user.name = form.name.data
+        current_user.first_name = form.first_name.data
+        current_user.last_name = form.last_name.data
         current_user.location = form.location.data
         current_user.about_me = form.about_me.data
         db.session.add(current_user)
         flash('Your profile has been updated.')
         return redirect(url_for('.user', username=current_user.username))
-    form.name.data = current_user.name
+    form.first_name.data = current_user.last_name
+    form.last_name.data = current_user.last_name
     form.location.data = current_user.location
     form.about_me.data = current_user.about_me
     return render_template('edit_profile.html', form=form)
@@ -74,7 +76,8 @@ def edit_profile_admin(id):
         user.username = form.username.data
         user.confirmed = form.confirmed.data
         user.role = Role.query.get(form.role.data)
-        user.name = form.name.data
+        user.first_name = form.first_name.data
+        user.last_name = form.last_name.data
         user.location = form.location.data
         user.about_me = form.about_me.data
         db.session.add(user)
@@ -84,7 +87,8 @@ def edit_profile_admin(id):
     form.username.data = user.username
     form.confirmed.data = user.confirmed
     form.role.data = user.role_id
-    form.name.data = user.name
+    form.first_name.data = user.first_name
+    form.last_name.data = user.last_name
     form.location.data = user.location
     form.about_me.data = user.about_me
     return render_template('edit_profile.html', form=form, user=user)

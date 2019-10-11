@@ -8,12 +8,24 @@ from ..models import Role, User
 
 
 class NameForm(FlaskForm):
-    name = StringField('What is your name?', validators=[Required()])
+    first_name = StringField('What is your first name?', validators=[Required()])
+    last_name = StringField('What is your last name?', validators=[Required()])
     submit = SubmitField('Submit')
 
 
 class EditProfileForm(FlaskForm):
-    name = StringField('Real name', validators=[Length(0, 64)])
+    first_name = StringField('first name', validators=[
+        Required(), Length(min=3, message='too short'), Length(max=20,
+                                                               message='too long'),
+        Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0,
+               'Usernames must have only letters, '
+               'numbers, dots or underscores')])
+    last_name = StringField('last name', validators=[
+        Required(), Length(min=3, message='too short'), Length(max=20,
+                                                               message='too long'),
+        Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0,
+               'Usernames must have only letters, '
+               'numbers, dots or underscores')])
     location = StringField('Location', validators=[Length(0, 64)])
     about_me = TextAreaField('About me')
     submit = SubmitField('Submit')

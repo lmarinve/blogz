@@ -20,9 +20,10 @@ class Permission:
 class Role(db.Model):
     __tablename__ = 'roles'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(20), unique=True)
+    name = db.Column(db.String(64), unique=True)
     default = db.Column(db.Boolean, default=False, index=True)
     permissions = db.Column(db.Integer)
+    users = db.relationship('User', backref='role', lazy='dynamic')
 
     @staticmethod
     def insert_roles():
@@ -64,11 +65,10 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(32), unique=True, index=True)
     username = db.Column(db.String(20), unique=True, index=True)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
-    role = db.relationship('Role', backref=db.backref('roles', lazy='dynamic'))
-    password_hash = db.Column(db.String(128), nullable=False)
+    password_hash = db.Column(db.String(128))
     confirmed = db.Column(db.Boolean, default=False)
-    first_name = db.Column(db.String(15), nullable=False)
-    last_name = db.Column(db.String(15), nullable=False)
+    first_name = db.Column(db.String(20))
+    last_name = db.Column(db.String(20))
     location = db.Column(db.String(64))
     about_me = db.Column(db.Text())
     member_since = db.Column(db.DateTime(), default=datetime.utcnow)
@@ -197,7 +197,7 @@ class User(UserMixin, db.Model):
 
     def can(self, permissions):
         return self.role is not None and \
-               (self.role.permissions & permissions) == permissions
+            (self.role.permissions & permissions) == permissions
 
     def is_administrator(self):
         return self.can(Permission.ADMINISTER)
@@ -236,7 +236,7 @@ class User(UserMixin, db.Model):
 
     @property
     def followed_posts(self):
-        return Post.query.join(Follow, Follow.followed_id == Post.author_id) \
+        return Post.query.join(Follow, Follow.followed_id == Post.author_id)\
             .filter(Follow.follower_id == self.id)
 
     def __repr__(self):
@@ -249,7 +249,6 @@ class AnonymousUser(AnonymousUserMixin):
 
     def is_administrator(self):
         return False
-
 
 login_manager.anonymous_user = AnonymousUser
 
@@ -292,7 +291,6 @@ class Post(db.Model):
             markdown(value, output_format='html'),
             tags=allowed_tags, strip=True))
 
-
 db.event.listen(Post.body, 'set', Post.on_changed_body)
 
 
@@ -314,6 +312,4 @@ class Comment(db.Model):
             markdown(value, output_format='html'),
             tags=allowed_tags, strip=True))
 
-
 db.event.listen(Comment.body, 'set', Comment.on_changed_body)
-
